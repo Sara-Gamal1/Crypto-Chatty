@@ -15,11 +15,19 @@ const getUserProfile = async (req, res) => {
     if (mongoose.Types.ObjectId.isValid(query)) {
       user = await User.findOne({ _id: query })
         .select("-password")
+        .select("-algamal_Xa")
+        .select("-algamal_Ya")
+        .select("-diffieHelman_Xa")
+        .select("-diffieHelman_Ya")
         .select("-updatedAt");
     } else {
       // query is username
       user = await User.findOne({ username: query })
         .select("-password")
+        .select("-algamal_Xa")
+        .select("-algamal_Ya")
+        .select("-diffieHelman_Xa")
+        .select("-diffieHelman_Ya")
         .select("-updatedAt");
     }
 
