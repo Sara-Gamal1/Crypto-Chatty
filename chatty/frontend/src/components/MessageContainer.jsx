@@ -8,6 +8,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { useSocket } from "../context/SocketContext.jsx";
 import messageSound from "../assets/sounds/message.mp3";
+import aes256 from 'aes256'
 const MessageContainer = () => {
 	const showToast = useShowToast();
 	const selectedConversation = useRecoilValue(selectedConversationAtom);
@@ -20,8 +21,13 @@ const MessageContainer = () => {
 
 	useEffect(() => {
 		socket.on("newMessage", (message) => {
-			if (selectedConversation._id === message.conversationId) {
-				setMessages((prev) => [...prev, message]);
+			let key = "it is a bad day not a bad life";
+			let msg = aes256.decrypt(key, message.text);
+			let newMessage = message;
+			newMessage.text=msg
+
+			if (selectedConversation._id === newMessage.conversationId) {
+				setMessages((prev) => [...prev, newMessage]);
 			}
 
 			// make a sound if the window is not focused
@@ -32,12 +38,12 @@ const MessageContainer = () => {
 
 			setConversations((prev) => {
 				const updatedConversations = prev.map((conversation) => {
-					if (conversation._id === message.conversationId) {
+					if (conversation._id === newMessage.conversationId) {
 						return {
 							...conversation,
 							lastMessage: {
-								text: message.text,
-								sender: message.sender,
+								text: newMessage.text,
+								sender: newMessage.sender,
 							},
 						};
 					}
