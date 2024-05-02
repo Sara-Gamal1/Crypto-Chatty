@@ -1,4 +1,4 @@
-myenv/
-__pycache__
-1algamal.txt
-2algamal.txt
+chat/myenv/
+chat/__pycache__
+chat/1algamal.txt
+chat/2algamal.txt
