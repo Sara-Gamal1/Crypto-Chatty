@@ -53,9 +53,9 @@ def generateElgamalKeys(id):
 
 
 def get_friend_gamal_Yb(id):
-    if id==1:
+    if id=="1":
         friend=2
-    else :
+    elif id=="2" :
         friend=1
     filename = f"{friend}algamal.txt"  
     f = open(filename, "r")
@@ -71,8 +71,10 @@ def get_friend_gamal_Yb(id):
 # xb=computeXa('dfs')
 # ya=computeYa(xa,'dfs')
 # yb=computeYa(xb,'dfs')
-# s1,s2=getDigitalSignature(123123,xa)
-# print(verifyDigitalSignature(123123,s1,s2,ya))
+
+# s1,s2=getDigitalSignature(114785296385,xa)
+# print(s1,s2)
+# print(verifyDigitalSignature(114785296385,s1,s2,ya))
 __all__ = ["getDigitalSignature", "verifyDigitalSignature","generateElgamalKeys","get_friend_gamal_Yb"]
 
 
