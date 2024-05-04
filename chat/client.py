@@ -21,9 +21,13 @@ def handle_chats(connection: socket.socket):
             # If there is no message, there is a chance that connection has closed
             # so the connection will be closed and an error will be displayed.
             # If not, it will try to decode message in order to show to user.
-            if msg:
+            if msg.decode()=="Your friend has left":
+                print(msg.decode())
+                connection.close()
+                break
+            if msg :
                 originl_msg=decrypt(msg,secret_key)
-                print(originl_msg.decode("utf-8"))
+                print("friend : "+originl_msg.decode("utf-8"))
             
             else:
                 connection.close()
@@ -63,16 +67,17 @@ def client() -> None:
         id=initial_msg
             
         start = socket_instance.recv(1024).decode()
-        print(start)
+        print("your friend have joined")
         
-        
+   
         gamal_Xa,gamal_Ya=generateElgamalKeys(id)
+      
         Yb= get_friend_gamal_Yb(id)
         Diffie_Xa,Diffie_Ya=generateDiffeHellmanKeys(id)
-        s1,s2=getDigitalSignature(Diffie_Ya,gamal_Xa)
         
-        time.sleep(1)
-
+        s1,s2=getDigitalSignature(Diffie_Ya,gamal_Xa)
+        print(s1,s2,Diffie_Ya)
+        
         if(id=="2"):
             message = str(s1) + '|' + str(s2) + '|' + str(Diffie_Ya)
             socket_instance.send(message.encode())
@@ -81,7 +86,6 @@ def client() -> None:
             friend_s1=int(friend_s1)
             friend_s2=int(friend_s2)
             friend_Diffie_Ya=int(friend_Diffie_Ya)
-            print(friend_s1,friend_s2,friend_Diffie_Ya)
             
         if(id=="1"):
             msg=socket_instance.recv(1024).decode()
@@ -89,7 +93,6 @@ def client() -> None:
             friend_s1=int(friend_s1)
             friend_s2=int(friend_s2)
             friend_Diffie_Ya=int(friend_Diffie_Ya)
-            print(friend_s1,friend_s2,friend_Diffie_Ya)
             message = str(s1) + '|' + str(s2) + '|' + str(Diffie_Ya)
             socket_instance.send(message.encode())
             
@@ -107,7 +110,7 @@ def client() -> None:
             print("You are not my friend,evil hacker"+skull)
             socket_instance.close()
             return
-        
+                 
              
         threading.Thread(target=handle_chats, args=[socket_instance]).start()
          
@@ -125,7 +128,6 @@ def client() -> None:
             # Parse message to utf-8
             
             ciphertext=encrypt(msg.encode("utf-8"),secret_key)
-            print(ciphertext)
             socket_instance.send((ciphertext))
 
         # Close connection with the server

@@ -15,18 +15,23 @@ from utilities import (
 
 # Function to get the digital signature for a message
 def getDigitalSignature(M, Xa):
-    m = hash_sha1(str(M))  
+    
+    m = hash_sha1((M))  
+    
     q, alpha = readQ_Alpha("gamal.txt")
 
     k = generateRandomK(q)
+  
     S1 = powerMod(alpha, k, q)  
+  
     kInverse = modInverse(k, q - 1) 
-    S2 = (kInverse * (m - Xa * S1)) % (q - 1)  
+    S2 = (kInverse * (m - Xa * S1)) % (q - 1)
+    
     return  S1,  S2
 
 # Function to verify a digital signature
 def verifyDigitalSignature(M, S1, S2, Yb):
-    m = hash_sha1(str(M)) 
+    m = hash_sha1((M)) 
     q, alpha = readQ_Alpha("gamal.txt")
     V1 = powerMod(alpha, m, q)
     temp1 = powerMod(Yb, S1, q)
@@ -37,8 +42,9 @@ def verifyDigitalSignature(M, S1, S2, Yb):
 
 
 def generateElgamalKeys(id):
-    Xa=computeXa('algamal')
-    Ya=computeYa(Xa,'algamal')
+  
+    Xa=computeXa("gamal.txt")
+    Ya=computeYa(Xa,"gamal.txt")
     filename = f"{id}algamal.txt"  
     directory = os.path.dirname(filename)
     if directory and not os.path.exists(directory):
@@ -58,8 +64,9 @@ def get_friend_gamal_Yb(id):
     elif id=="2" :
         friend=1
     filename = f"{friend}algamal.txt"  
-    f = open(filename, "r")
-    Yb=int(f.readline())
+    with open(filename, "r") as file:
+        line = file.readline().strip()  # Read and strip whitespace
+        Yb = int(line)  #
     return Yb
 
     
@@ -67,10 +74,10 @@ def get_friend_gamal_Yb(id):
 
 
 ###########testing 
-# xa=computeXa('dfs')
-# xb=computeXa('dfs')
-# ya=computeYa(xa,'dfs')
-# yb=computeYa(xb,'dfs')
+# xa=computeXa('gamal.txt')
+# xb=computeXa('gamal.txt')
+# ya=computeYa(xa,'gamal.txt')
+# yb=computeYa(xb,'gamal.txt')
 
 # s1,s2=getDigitalSignature(114785296385,xa)
 # print(s1,s2)

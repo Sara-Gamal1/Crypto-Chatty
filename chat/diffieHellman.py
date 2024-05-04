@@ -12,9 +12,7 @@ import os
 def generateDiffeHellmanKeys(id):
     Xa = computeXa("diffieHelman.txt")
     Ya = computeYa(Xa, "diffieHelman.txt")
-    filename = f"{id}DiffieHellman.txt"  
-
-  
+ 
     return Xa,Ya
 
 # Async function to compute secret key
@@ -25,7 +23,6 @@ def secretKey(Xa, Yb):
     if Yb is None or Xa is None:
         raise ValueError("Either Yb or Xa is not defined.")
     K = powerMod(Yb, Xa, q)
-    print(q, alpha, Yb, Xa, K)
 
     return K
 

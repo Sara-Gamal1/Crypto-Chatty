@@ -27,12 +27,13 @@ def handle_user_connection(connection: socket.socket, address: str) -> None:
 
             # Close connection if no message was sent
             else:
-                remove_connection(connection)
+                remove_connection(connection,connections)
                 break
 
         except Exception as e:
-            print(f'Error to handle user connection: {e}')
-            remove_connection(connection)
+            # print(f'Error to handle user connection: {e}')
+            remove_connection(connection,connections
+            )
             break
 
 
@@ -52,19 +53,28 @@ def broadcast(message: str, connection: socket.socket) -> None:
             # if it fails, there is a chance of socket has died
             except Exception as e:
                 print('Error broadcasting message: {e}')
-                remove_connection(client_conn)
+                remove_connection(client_conn,connections)
 
-
-def remove_connection(conn: socket.socket) -> None:
-    '''
-        Remove specified connection from connections list
-    '''
-
-    # Check if connection exists on connections list
+def remove_connection(conn: socket.socket, connections: list) -> None:
+    """
+    Remove specified connection from connections list and notify others
+    """
+    # Check if the connection is in the connections list
+    
     if conn in connections:
-        # Close socket connection and remove connection from connections list
+        # Close the socket and remove the connection from the list
         conn.close()
-        connections.remove(conn)
+        connections.remove(conn)  # Only remove the specified connection
+
+        # Notify remaining connections about the disconnection
+        message = "Your friend has left".encode()
+        # Send the message to all other connections
+        for connection in connections:
+            try:
+                connection.send(message)
+            except socket.error:
+                # Handle cases where a connection might already be closed
+                pass
 
 
 def server() -> None:
@@ -85,15 +95,16 @@ def server() -> None:
         print('Server running!')
         
         while True:
+            socket_connection, address = socket_instance.accept() 
             if(len(connections)<2):
                 # Accept client connection
-                socket_connection, address = socket_instance.accept()
-                socket_connection.send(str(len(connections)+1).encode("utf-8"))
+                connections.append(socket_connection)
+
+                socket_connection.send(str(len(connections)).encode("utf-8"))
 
                 # Add client connection to connections list
                 # Start a new thread to handle client connection and receive it's messages
                 # in order to send to others connections
-                connections.append(socket_connection)
 
                 threading.Thread(target=handle_user_connection, args=[socket_connection, address]).start()
                 if(len(connections)==2 and started==False):
@@ -104,7 +115,7 @@ def server() -> None:
                 
             else:
                 # If limit reached, refuse the connection
-                socket_connection, _ = socket_instance.accept()  # Accept and then close to refuse
+                 # Accept and then close to refuse
                 socket_connection.send("Connection refused: server limit reached.".encode())
                 socket_connection.close()
 
@@ -114,7 +125,7 @@ def server() -> None:
         # In case of any problem we clean all connections and close the server connection
         if len(connections) > 0:
             for conn in connections:
-                remove_connection(conn)
+                remove_connection(conn,connections)
 
         socket_instance.close()
 
