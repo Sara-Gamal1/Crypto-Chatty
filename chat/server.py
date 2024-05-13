@@ -109,7 +109,6 @@ def server() -> None:
                 # in order to send to others connections
 
                 threading.Thread(target=handle_user_connection, args=[socket_connection, address]).start()
-                print(len(connections),started)
                 if(len(connections)==2 and started==False):
                         connections[1].send(" start ".encode())
                         connections[0].send(" start ".encode())

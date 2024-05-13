@@ -1,6 +1,8 @@
 from hashlib import sha1
 import random
 import os
+import datetime 
+
 from utilities import (
     hash_sha1,
     generateRandomK,
@@ -12,6 +14,21 @@ from utilities import (
    
 )
 
+
+
+def get_file_creation_time(file_path):
+    # Check if the file exists
+    if os.path.exists(file_path):
+        # Get the creation timestamp of the file
+        creation_timestamp = os.path.getctime(file_path)
+        
+        # Convert the timestamp to a datetime object
+        creation_time = datetime.datetime.fromtimestamp(creation_timestamp)
+        
+        return creation_time
+    else:
+        # If the file doesn't exist, return None
+        return None
 
 # Function to get the digital signature for a message
 def getDigitalSignature(M, Xa):
@@ -45,32 +62,56 @@ def generateElgamalKeys(id):
   
     Xa=computeXa("gamal.txt")
     Ya=computeYa(Xa,"gamal.txt")
-    filename = f"{id}algamal.txt"  
-    directory = os.path.dirname(filename)
-    if directory and not os.path.exists(directory):
-        os.makedirs(directory)
+    public_file = f"{id}algamal.txt"  
+    private_file = f"{id}gamal_private.txt"  
+    directory = os.path.isfile(public_file)
 
-    # Save Xa and Ya to the file
-    with open(filename, 'w') as file:
-        # file.write(f"Xa: {Xa}\n")
-        file.write(str(Ya))
+    current_date = datetime.datetime.now().date()
+ 
+    if  not directory or     (directory and ((current_date-get_file_creation_time(public_file).date()).days>365)):
+        print('creating new files')
+        # Save Xa and Ya to the file
+        with open(public_file, 'w') as file:
+            file.write(str(Ya))
+
+        with open(private_file, 'w') as file:
+            file.write(str(Xa))
+
+      
+    else :
+        
+       
+        with open(public_file, "r") as file:
+          Ya = file.readline().strip() 
+
+        if( Ya.isdigit()):
+             Ya = int(Ya) 
+        else :
+            print('error Ya',Ya) 
+        with open(private_file, "r") as file:
+          Xa = file.readline().strip() 
+
+        if( Xa.isdigit()):
+             Xa = int(Xa) 
+        else :
+            print('error Ya',Xa) 
 
     return Xa,Ya
-
 
 def get_friend_gamal_Yb(id):
     if id=="1":
         friend=2
     elif id=="2" :
         friend=1
-    filename = f"{friend}algamal.txt"  
-    with open(filename, "r") as file:
-        line = file.readline().strip()  
+    filename = f"{friend}algamal.txt"
+    line=''
+    while(not line.isdigit())  :
+        with open(filename, "r") as file:
+            line = file.readline().strip() 
 
-        if( line.isdigit()):
-             Yb = int(line) 
-        else :
-            print('error Yb',line) 
+            if( line.isdigit()):
+                Yb = int(line) 
+           
     return Yb
 
     

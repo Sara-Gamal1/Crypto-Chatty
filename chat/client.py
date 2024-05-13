@@ -1,7 +1,7 @@
 import socket, threading,sys,signal
 import binascii
 import apscheduler
-from apscheduler.schedulers.background import BackgroundScheduler
+
 from AES256 import(encrypt,decrypt)
 import time
 from algamal import (generateElgamalKeys,getDigitalSignature,verifyDigitalSignature,get_friend_gamal_Yb)
@@ -65,12 +65,12 @@ def client() -> None:
 
         print('Connected to chat!')
         id=initial_msg
-            
+        gamal_Xa,gamal_Ya=generateElgamalKeys(id)
         start = socket_instance.recv(1024).decode()
         print("your friend have joined")
         
    
-        gamal_Xa,gamal_Ya=generateElgamalKeys(id)
+  
       
         Yb= get_friend_gamal_Yb(id)
         Diffie_Xa,Diffie_Ya=generateDiffeHellmanKeys(id)
@@ -134,9 +134,7 @@ def client() -> None:
 
         # Read user's input until it quit from chat and close connection
         while True:
-            scheduler = BackgroundScheduler()
-            scheduler.add_job(generateElgamalKeys, 'interval',days=365,args=( initial_msg))  # Schedule the yearly task
-            scheduler.start()
+           
             msg = input()
 
             if msg == 'quit':

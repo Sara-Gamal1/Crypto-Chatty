@@ -1,16 +1,12 @@
 import string
-
 START = ord("a")
 CHARSET = string.ascii_lowercase[:16]
-
 def encode_b16(plain):
 	encoded = ""
 	for c in plain:
 		binary = "{0:08b}".format(ord(c))
 		encoded += (CHARSET[int(binary[:4], 2)] + CHARSET[int(binary[4:], 2)])
 	return encoded
-
-
 def decode_b16(encoded):
     decoded = ""
     for i in range(0, len(encoded), 2):
@@ -19,15 +15,10 @@ def decode_b16(encoded):
         decimal_char = int(binary_char, 2)  
         decoded += chr(decimal_char)
     return decoded
-
-
-
 def caesar_shift(c, k):
 	return CHARSET[(ord(c) + ord(k) - 2 * START) % len(CHARSET)]
-
 def caesar_unshift(c, k):
 	return CHARSET[((-(ord(k) - 2 * START)+CHARSET.index(c)) % len(CHARSET))-1]
-
 # flag = "secretkey"
 # hint: key is a single letter
 # key="secretkey"
@@ -38,13 +29,8 @@ def caesar_unshift(c, k):
 # for i, c in enumerate(b16):
 # 	enc += caesar_shift(c, key[i % len(key)])
 # print(enc)
-
-# ciphertext="jikmkjgekjkckjkbknkjlhgekflgkjgekbkfkpknkcklgekfgekbkdlkkjgcgejlkjgekckjkjkigelikdgekfkhligekkkflhligc"
 with open("./CTF/CTF-6 (New Encryption)/cipher.txt", "r") as file:
-	
     ciphertext = file.readline()
-
-
 for letter in string.ascii_lowercase:
 	key = letter
 	dec = ""
