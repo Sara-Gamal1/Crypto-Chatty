@@ -39,7 +39,11 @@ def caesar_unshift(c, k):
 # 	enc += caesar_shift(c, key[i % len(key)])
 # print(enc)
 
-ciphertext="jikmkjgekjkckjkbknkjlhgekflgkjgekbkfkpknkcklgekfgekbkdlkkjgcgejlkjgekckjkjkigelikdgekfkhligekkkflhligc"
+# ciphertext="jikmkjgekjkckjkbknkjlhgekflgkjgekbkfkpknkcklgekfgekbkdlkkjgcgejlkjgekckjkjkigelikdgekfkhligekkkflhligc"
+with open("./CTF/CTF-6 (New Encryption)/cipher.txt", "r") as file:
+	
+    ciphertext = file.readline()
+
 
 for letter in string.ascii_lowercase:
 	key = letter
@@ -50,5 +54,5 @@ for letter in string.ascii_lowercase:
 	print("Key is ",key," plaintext is ",plaintext)
 
 # After seeing the results:
-# the key is "u" and the decrepted ciphertext is "The enemies are making a move. We need to act fast."
+# the key is "e" or "u" the decrepted ciphertext is "The enemies are making a move. We need to act fast."
 

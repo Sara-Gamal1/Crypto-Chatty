@@ -56,6 +56,7 @@ def broadcast(message: str, connection: socket.socket) -> None:
                 remove_connection(client_conn,connections)
 
 def remove_connection(conn: socket.socket, connections: list) -> None:
+    global started
     """
     Remove specified connection from connections list and notify others
     """
@@ -68,6 +69,7 @@ def remove_connection(conn: socket.socket, connections: list) -> None:
 
         # Notify remaining connections about the disconnection
         message = "Your friend has left".encode()
+        started=False
         # Send the message to all other connections
         for connection in connections:
             try:
@@ -107,6 +109,7 @@ def server() -> None:
                 # in order to send to others connections
 
                 threading.Thread(target=handle_user_connection, args=[socket_connection, address]).start()
+                print(len(connections),started)
                 if(len(connections)==2 and started==False):
                         connections[1].send(" start ".encode())
                         connections[0].send(" start ".encode())

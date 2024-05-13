@@ -65,8 +65,12 @@ def get_friend_gamal_Yb(id):
         friend=1
     filename = f"{friend}algamal.txt"  
     with open(filename, "r") as file:
-        line = file.readline().strip()  # Read and strip whitespace
-        Yb = int(line)  #
+        line = file.readline().strip()  
+
+        if( line.isdigit()):
+             Yb = int(line) 
+        else :
+            print('error Yb',line) 
     return Yb
 
     

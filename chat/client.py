@@ -76,23 +76,40 @@ def client() -> None:
         Diffie_Xa,Diffie_Ya=generateDiffeHellmanKeys(id)
         
         s1,s2=getDigitalSignature(Diffie_Ya,gamal_Xa)
-        print(s1,s2,Diffie_Ya)
+    
         
         if(id=="2"):
             message = str(s1) + '|' + str(s2) + '|' + str(Diffie_Ya)
             socket_instance.send(message.encode())
             msg=socket_instance.recv(1024).decode()
             friend_s1, friend_s2, friend_Diffie_Ya = msg.split('|')
-            friend_s1=int(friend_s1)
-            friend_s2=int(friend_s2)
-            friend_Diffie_Ya=int(friend_Diffie_Ya)
-            
+            if( friend_s1.isdigit()):
+               friend_s1=int(friend_s1)
+            else :
+                print('error friend_s1',friend_s1) 
+            if( friend_s2.isdigit()):
+                friend_s2=int(friend_s2)
+            else :
+                print('error friend_s2',friend_s2) 
+            if( friend_Diffie_Ya.isdigit()):
+               friend_Diffie_Ya=int(friend_Diffie_Ya)
+            else :
+                print('error friend_Diffie_Ya',friend_Diffie_Ya) 
         if(id=="1"):
             msg=socket_instance.recv(1024).decode()
             friend_s1, friend_s2, friend_Diffie_Ya = msg.split('|')
-            friend_s1=int(friend_s1)
-            friend_s2=int(friend_s2)
-            friend_Diffie_Ya=int(friend_Diffie_Ya)
+            if( friend_s1.isdigit()):
+               friend_s1=int(friend_s1)
+            else :
+                print('error friend_s1',friend_s1) 
+            if( friend_s2.isdigit()):
+                friend_s2=int(friend_s2)
+            else :
+                print('error friend_s2',friend_s2) 
+            if( friend_Diffie_Ya.isdigit()):
+               friend_Diffie_Ya=int(friend_Diffie_Ya)
+            else :
+                print('error friend_Diffie_Ya',friend_Diffie_Ya) 
             message = str(s1) + '|' + str(s2) + '|' + str(Diffie_Ya)
             socket_instance.send(message.encode())
             
