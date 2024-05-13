@@ -105,6 +105,10 @@ def get_friend_gamal_Yb(id):
         friend=1
     filename = f"{friend}algamal.txt"
     line=''
+    directory = os.path.isfile(filename)
+    while (not directory):
+         directory = os.path.isfile(filename)
+        
     while(not line.isdigit())  :
         with open(filename, "r") as file:
             line = file.readline().strip() 

@@ -49,7 +49,7 @@ These instructions will help you set up and run the chat system on your local ma
 5. Install the required Python libraries:
 
     ```bash
-    pip install pycryptodom
+    pip install pycryptodome
     ```
     
 
